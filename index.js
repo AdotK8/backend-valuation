@@ -16,14 +16,6 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASSWORD,
   },
 });
-//configure email options
-const mailOptions = {
-  from: `Yase Property <${process.env.EMAIL_ADDRESS}>`,
-  to: "ahmedkhan895.ak@gmail.com",
-  //   bcc: process.env.EMAIL_ADDRESS,
-  subject: "Test email subject",
-  text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-};
 
 //setting up server
 const server = http.createServer((req, res) => {
@@ -54,7 +46,29 @@ const server = http.createServer((req, res) => {
         const processedRentData = data.processedRentData;
         const userInput = data.userInput;
 
+        console.log(userInput.emailInput);
+        console.log(userInput.firstName);
+        console.log(userInput.postcode);
+        console.log(processedSaleData.average);
+        console.log(processedSaleData.minimum);
+        console.log(processedSaleData.maximum);
+        console.log(processedRentData.rent);
+
         //define specific mailoptions here
+
+        //configure email options
+        const mailOptions = {
+          from: `Yase Property <${process.env.EMAIL_ADDRESS}>`,
+          to: userInput.emailInput,
+          bcc: process.env.EMAIL_ADDRESS,
+          subject: "Your Property Valuation and Next Steps with Yase Property",
+          html: `<div style="font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;">
+          <h2 style="color: #007bff;">Hi ${userInput.firstName},</h2>
+          <p style="font-size: 16px;">Thank you for filling out our property valuation calculator.</p>
+          <p style="font-size: 16px;">Your Property has an estimated sale price of ${processedSaleData.average}, and an estimated rental price of ${processedRentData.rent}.</p>
+          <p style="font-size: 16px;">Yours sincerely,<br>Yase Team</p>
+     </div>`,
+        };
 
         transporter.sendMail(mailOptions, (err, info) => {
           if (err) {
@@ -89,6 +103,18 @@ const server = http.createServer((req, res) => {
         const userInput = data.userInput;
 
         //define specific mailoptions here
+        const mailOptions = {
+          from: `Yase Property <${process.env.EMAIL_ADDRESS}>`,
+          to: userInput.emailInput,
+          // bcc: process.env.EMAIL_ADDRESS,
+          subject: "Your Property Valuation and Next Steps with Yase Property",
+          html: `<div style="font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;">
+          <h2 style="color: #007bff;">Hi ${userInput.firstName},</h2>
+          <p style="font-size: 16px;">Thank you for filling out our property valuation calculator.</p>
+          <p style="font-size: 16px;">Your Property has an estimated sale price of ${processedSaleData.average}.</p>
+          <p style="font-size: 16px;">Yours sincerely,<br>Yase Team</p>
+     </div>`,
+        };
 
         transporter.sendMail(mailOptions, (err, info) => {
           if (err) {
@@ -122,6 +148,17 @@ const server = http.createServer((req, res) => {
         const userInput = data.userInput;
 
         //define specific mailoptions here
+        const mailOptions = {
+          from: `Yase Property <${process.env.EMAIL_ADDRESS}>`,
+          to: userInput.emailInput,
+          // bcc: process.env.EMAIL_ADDRESS,
+          subject: "Client failed to get valuation",
+          html: `<p>The following client has failed to get their valuation</p>
+          <p>Full name: ${userInput.firstName} ${userInput.secondNameInput}</p>
+          <p>Email address: ${userInput.emailInput} </p>
+          <p>Number: ${userInput.phoneInput} </p>
+          <p>Postcode: ${userInput.postcode} </p>`,
+        };
 
         transporter.sendMail(mailOptions, (err, info) => {
           if (err) {
