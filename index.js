@@ -46,13 +46,7 @@ const server = http.createServer((req, res) => {
         const processedRentData = data.processedRentData;
         const userInput = data.userInput;
 
-        console.log(userInput.emailInput);
-        console.log(userInput.firstName);
-        console.log(userInput.postcode);
-        console.log(processedSaleData.average);
-        console.log(processedSaleData.minimum);
-        console.log(processedSaleData.maximum);
-        console.log(processedRentData.rent);
+        sendInternalEmail(userInput);
 
         //define specific mailoptions here
 
@@ -60,7 +54,7 @@ const server = http.createServer((req, res) => {
         const mailOptions = {
           from: `Yase Property <${process.env.EMAIL_ADDRESS}>`,
           to: userInput.emailInput,
-          bcc: process.env.EMAIL_ADDRESS,
+          // bcc: process.env.EMAIL_ADDRESS,
           subject: "Your Property Valuation and Next Steps with Yase Property",
           html: `<div style="font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;">
           <h2 style="color: #007bff;">Hi ${userInput.firstName},</h2>
@@ -101,6 +95,8 @@ const server = http.createServer((req, res) => {
         const data = JSON.parse(body);
         const processedSaleData = data.processedSaleData;
         const userInput = data.userInput;
+
+        sendInternalEmail(userInput);
 
         //define specific mailoptions here
         const mailOptions = {
@@ -147,6 +143,8 @@ const server = http.createServer((req, res) => {
         const data = JSON.parse(body);
         const userInput = data.userInput;
 
+        sendInternalEmail(userInput);
+
         //define specific mailoptions here
         const mailOptions = {
           from: `Yase Property <${process.env.EMAIL_ADDRESS}>`,
@@ -183,6 +181,32 @@ const server = http.createServer((req, res) => {
     res.end("Not Found");
   }
 });
+
+function sendInternalEmail(userInput) {
+  console.log(userInput);
+
+  const mailOptions = {
+    from: `Yase Property <${process.env.EMAIL_ADDRESS}>`,
+    to: userInput.emailInput,
+    subject: "NEW VALUATION",
+    html: `<p>Following client has used property valuation calculator</p>
+    <p>Full name: ${userInput.firstName} ${userInput.secondNameInput}</p>
+    <p>Email address: ${userInput.emailInput} </p>
+    <p>Number: ${userInput.phoneInput} </p>
+    <p>Postcode: ${userInput.postcode} </p>
+    <p>Sell or Let: ${userInput.sellOrLet} </p>`,
+  };
+
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      console.error("Error sending email: ", err);
+      // Log the error instead of sending a response
+    } else {
+      console.log("Email sent: ", info.response);
+      // Log the success message instead of sending a response
+    }
+  });
+}
 
 //listening to requests to server
 const PORT = process.env.PORT || 3000;
