@@ -48,20 +48,22 @@ const server = http.createServer((req, res) => {
 
         sendInternalEmail(userInput);
 
-        //define specific mailoptions here
-
         //configure email options
         const mailOptions = {
           from: `Yase Property <${process.env.EMAIL_ADDRESS}>`,
           to: userInput.emailInput,
           // bcc: process.env.EMAIL_ADDRESS,
-          subject: "Your Property Valuation and Next Steps with Yase Property",
-          html: `<div style="font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;">
-          <h2 style="color: #007bff;">Hi ${userInput.firstName},</h2>
+          subject: "Your Property Valuation with Yase Property",
+          html: `<div style="font-family: Arial, sans-serif; padding: 20px; color: black;">
+          <p style="font-size: 16px;">Hi ${userInput.firstName},</p>
           <p style="font-size: 16px;">Thank you for filling out our property valuation calculator.</p>
-          <p style="font-size: 16px;">Your Property has an estimated sale price of ${processedSaleData.average}, and an estimated rental price of ${processedRentData.rent}.</p>
+          <p style="font-size: 16px;">Your Property has an estimated sale price of ${processedSaleData.average}  and can potentially achieve a price of ${processedSaleData.maximum} and an estimated rental price of ${processedRentData.rent}.</p>
+          <p style="font-size: 16px;">If you would like to discuss how to get the most out of your property, please get in touch by replying to this email.</p>
           <p style="font-size: 16px;">Yours sincerely,<br>Yase Team</p>
-     </div>`,
+          <a href="https://yaseproperty.com">
+            <img src="https://i.postimg.cc/j2hNHR12/YASE-LOGO-PNG.png" alt="Your Image" style="max-width: 150px; height: auto;">
+          </a>
+        </div>`,
         };
 
         transporter.sendMail(mailOptions, (err, info) => {
@@ -104,12 +106,16 @@ const server = http.createServer((req, res) => {
           to: userInput.emailInput,
           // bcc: process.env.EMAIL_ADDRESS,
           subject: "Your Property Valuation and Next Steps with Yase Property",
-          html: `<div style="font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; padding: 20px;">
-          <h2 style="color: #007bff;">Hi ${userInput.firstName},</h2>
+          html: `<div style="font-family: Arial, sans-serif; padding: 20px; color: black;">
+          <p style="font-size: 16px;">Hi ${userInput.firstName},</p>
           <p style="font-size: 16px;">Thank you for filling out our property valuation calculator.</p>
-          <p style="font-size: 16px;">Your Property has an estimated sale price of ${processedSaleData.average}.</p>
+          <p style="font-size: 16px;">Your Property has an estimated sale price of ${processedSaleData.average} and can potentially achieve a price of ${processedSaleData.maximum}.</p>
+          <p style="font-size: 16px;">If you would like to discuss how to get the most out of your property, please get in touch by replying to this email.</p>
           <p style="font-size: 16px;">Yours sincerely,<br>Yase Team</p>
-     </div>`,
+          <a href="https://yaseproperty.com">
+            <img src="https://i.postimg.cc/j2hNHR12/YASE-LOGO-PNG.png" alt="Your Image" style="max-width: 150px; height: auto;">
+          </a>
+        </div>`,
         };
 
         transporter.sendMail(mailOptions, (err, info) => {
