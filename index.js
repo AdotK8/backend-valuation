@@ -40,7 +40,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Handle requests to the /send-email endpoint
+  // Handle requests to the /send-email-full endpoint
   if (req.url === "/send-email-full" && req.method === "POST") {
     let body = "";
     console.log("full email");
@@ -201,7 +201,7 @@ function sendInternalEmail(userInput) {
 
   const mailOptions = {
     from: `Yase Property <${process.env.EMAIL_ADDRESS}>`,
-    to: userInput.emailInput,
+    to: process.env.EMAIL_ADDRESS,
     subject: "NEW VALUATION",
     html: `<p>Following client has used property valuation calculator</p>
     <p>Full name: ${userInput.firstName} ${userInput.secondNameInput}</p>
