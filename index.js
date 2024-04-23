@@ -1,5 +1,4 @@
 const nodemailer = require("nodemailer");
-//obtaining secured credentils
 const dotenv = require("dotenv");
 const http = require("http");
 
@@ -17,10 +16,20 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+const allowedOrigins = [
+  "https://yase-valuation-widget-0f6fe864605b.herokuapp.com",
+  // Add any additional origins you want to allow
+];
+
 //setting up server
 const server = http.createServer((req, res) => {
-  // Allow requests from any origin
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  const origin = req.headers.origin;
+
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  } else {
+    res.setHeader("Access-Control-Allow-Origin", "none");
+  }
 
   // Handle preflight requests
   if (req.method === "OPTIONS") {
@@ -52,7 +61,7 @@ const server = http.createServer((req, res) => {
         const mailOptions = {
           from: `Yase Property <${process.env.EMAIL_ADDRESS}>`,
           to: userInput.emailInput,
-          // bcc: process.env.EMAIL_ADDRESS,
+          bcc: process.env.EMAIL_ADDRESS,
           subject: "Your Property Valuation with Yase Property",
           html: `<div style="font-family: Arial, sans-serif; padding: 20px; color: black;">
           <p style="font-size: 16px;">Hi ${userInput.firstName},</p>
@@ -104,7 +113,7 @@ const server = http.createServer((req, res) => {
         const mailOptions = {
           from: `Yase Property <${process.env.EMAIL_ADDRESS}>`,
           to: userInput.emailInput,
-          // bcc: process.env.EMAIL_ADDRESS,
+          bcc: process.env.EMAIL_ADDRESS,
           subject: "Your Property Valuation and Next Steps with Yase Property",
           html: `<div style="font-family: Arial, sans-serif; padding: 20px; color: black;">
           <p style="font-size: 16px;">Hi ${userInput.firstName},</p>
@@ -154,8 +163,7 @@ const server = http.createServer((req, res) => {
         //define specific mailoptions here
         const mailOptions = {
           from: `Yase Property <${process.env.EMAIL_ADDRESS}>`,
-          to: userInput.emailInput,
-          // bcc: process.env.EMAIL_ADDRESS,
+          to: process.env.EMAIL_ADDRESS,
           subject: "Client failed to get valuation",
           html: `<p>The following client has failed to get their valuation</p>
           <p>Full name: ${userInput.firstName} ${userInput.secondNameInput}</p>
