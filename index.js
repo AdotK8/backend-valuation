@@ -207,8 +207,7 @@ function sendInternalEmail(userInput) {
     <p>Full name: ${userInput.firstName} ${userInput.secondNameInput}</p>
     <p>Email address: ${userInput.emailInput} </p>
     <p>Number: ${userInput.phoneInput} </p>
-    <p>Postcode: ${userInput.postcode} </p>
-    <p>Sell or Let: ${userInput.sellOrLet} </p>`,
+    <p>Postcode: ${userInput.postcode} </p>`,
   };
 
   transporter.sendMail(mailOptions, (err, info) => {
