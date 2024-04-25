@@ -189,6 +189,48 @@ const server = http.createServer((req, res) => {
         res.end("Error parsing JSON");
       }
     });
+  }
+  //email for booking valuations
+  else if (req.url === "/book-val" && req.method === "POST") {
+    let body = "";
+    req.on("data", (chunk) => {
+      body += chunk.toString();
+    });
+
+    req.on("end", () => {
+      try {
+        const data = JSON.parse(body);
+        const userInput = data.userInput;
+
+        //define specific mailoptions here
+        const mailOptions = {
+          from: `Yase Property <${process.env.EMAIL_ADDRESS}>`,
+          to: process.env.EMAIL_ADDRESS,
+          subject: "Client has requested to book valuation ",
+          html: `<p>Following client has requested to book an accurate valuation/p>
+          <p>Full name: ${userInput.firstName} ${userInput.secondNameInput}</p>
+          <p>Email address: ${userInput.emailInput} </p>
+          <p>Number: ${userInput.phoneInput} </p>
+          <p>Postcode: ${userInput.postcode} </p>`,
+        };
+
+        transporter.sendMail(mailOptions, (err, info) => {
+          if (err) {
+            console.error("Error sending email: ", err);
+            res.writeHead(500, { "Content-Type": "text/plain" });
+            res.end("Error sending email");
+          } else {
+            console.log("Email sent: ", info.response);
+            res.writeHead(200, { "Content-Type": "text/plain" });
+            res.end("Email sent successfully");
+          }
+        });
+      } catch (error) {
+        console.error("Error parsing JSON:", error);
+        res.writeHead(400, { "Content-Type": "text/plain" });
+        res.end("Error parsing JSON");
+      }
+    });
   } else {
     // Respond with 404 for other routes
     res.writeHead(404, { "Content-Type": "text/plain" });
