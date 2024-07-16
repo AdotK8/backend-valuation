@@ -4,7 +4,6 @@ const http = require("http");
 
 dotenv.config();
 
-//create nodemailer transport
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   host: "smtp.gmail.com",
@@ -18,10 +17,8 @@ const transporter = nodemailer.createTransport({
 
 const allowedOrigins = [
   "https://yase-valuation-widget-0f6fe864605b.herokuapp.com",
-  // Add any additional origins you want to allow
 ];
 
-//setting up server
 const server = http.createServer((req, res) => {
   const origin = req.headers.origin;
 
@@ -31,7 +28,6 @@ const server = http.createServer((req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "none");
   }
 
-  // Handle preflight requests
   if (req.method === "OPTIONS") {
     res.setHeader("Access-Control-Allow-Methods", "POST");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -40,7 +36,6 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Handle requests to the /send-email-full endpoint
   if (req.url === "/send-email-full" && req.method === "POST") {
     let body = "";
     console.log("full email");
@@ -57,7 +52,6 @@ const server = http.createServer((req, res) => {
 
         sendInternalEmail(userInput);
 
-        //configure email options
         const mailOptions = {
           from: `Yase Property <${process.env.EMAIL_ADDRESS}>`,
           to: userInput.emailInput,
@@ -109,7 +103,6 @@ const server = http.createServer((req, res) => {
 
         sendInternalEmail(userInput);
 
-        //define specific mailoptions here
         const mailOptions = {
           from: `Yase Property <${process.env.EMAIL_ADDRESS}>`,
           to: userInput.emailInput,
@@ -160,7 +153,6 @@ const server = http.createServer((req, res) => {
 
         sendInternalEmail(userInput);
 
-        //define specific mailoptions here
         const mailOptions = {
           from: `Yase Property <${process.env.EMAIL_ADDRESS}>`,
           to: process.env.EMAIL_ADDRESS,
@@ -202,7 +194,6 @@ const server = http.createServer((req, res) => {
         const data = JSON.parse(body);
         const userInput = data.userInput;
 
-        //define specific mailoptions here
         const mailOptions = {
           from: `Yase Property <${process.env.EMAIL_ADDRESS}>`,
           to: process.env.EMAIL_ADDRESS,
@@ -232,7 +223,6 @@ const server = http.createServer((req, res) => {
       }
     });
   } else {
-    // Respond with 404 for other routes
     res.writeHead(404, { "Content-Type": "text/plain" });
     res.end("Not Found");
   }
@@ -255,10 +245,8 @@ function sendInternalEmail(userInput) {
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
       console.error("Error sending email: ", err);
-      // Log the error instead of sending a response
     } else {
       console.log("Email sent: ", info.response);
-      // Log the success message instead of sending a response
     }
   });
 }
@@ -273,7 +261,6 @@ transporter.on("error", (err) => {
   console.error("Mail transporter error:", err);
 });
 
-// Add error event listener to server
 server.on("error", (err) => {
   console.error("Server error:", err);
 });
